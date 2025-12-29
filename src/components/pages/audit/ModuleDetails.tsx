@@ -10,12 +10,13 @@ import { Lightbulb, AlertTriangle, CheckCircle, Bot, Loader } from "lucide-react
 import type { AuditData, Brand, AuditModuleInfo } from "@/lib/types";
 import { provideAiPoweredRecommendations } from "@/ai/flows/provide-ai-powered-recommendations";
 import { useToast } from "@/hooks/use-toast";
+import * as icons from "lucide-react";
 
 
 type ModuleDetailsProps = {
   allData: {
-    acme: { moduleInfo: AuditModuleInfo; moduleAuditData: AuditData; brand: Brand; };
-    globex: { moduleInfo: AuditModuleInfo; moduleAuditData: AuditData; brand: Brand; };
+    acme: { moduleInfo: Omit<AuditModuleInfo, 'icon'>; moduleAuditData: AuditData; brand: Brand; };
+    globex: { moduleInfo: Omit<AuditModuleInfo, 'icon'>; moduleAuditData: AuditData; brand: Brand; };
   }
 }
 
@@ -30,6 +31,7 @@ export default function ModuleDetails({ allData }: ModuleDetailsProps) {
   if (!data) return null;
 
   const { moduleInfo, moduleAuditData } = data;
+  const Icon = icons[moduleInfo.iconName as keyof typeof icons] as icons.LucideIcon;
 
   const handleGenerateRecommendations = async () => {
     setLoading(true);
@@ -79,7 +81,7 @@ export default function ModuleDetails({ allData }: ModuleDetailsProps) {
         <CardHeader>
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary">
-              <moduleInfo.icon className="h-6 w-6 text-primary" />
+              {Icon && <Icon className="h-6 w-6 text-primary" />}
             </div>
             <div>
               <CardTitle className="text-2xl">{moduleInfo.name}</CardTitle>

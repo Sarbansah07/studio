@@ -21,6 +21,7 @@ export type AuditModuleInfo = {
   name: string;
   description: string;
   icon: LucideIcon;
+  iconName: string;
 };
 
 export type AuditData = {

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { auditData, brands } from "@/lib/data";
 import { AUDIT_MODULES } from "@/lib/constants";
-import type { AuditData, Brand } from "@/lib/types";
+import type { AuditData, Brand, AuditModuleInfo } from "@/lib/types";
 import ModuleDetails from "@/components/pages/audit/ModuleDetails";
 
 export async function generateStaticParams() {
@@ -15,7 +15,7 @@ export async function generateStaticParams() {
 const getModuleData = (
   slug: string,
   brandId: string
-): { moduleInfo: any; moduleAuditData: AuditData; brand: Brand } | null => {
+): { moduleInfo: Omit<AuditModuleInfo, 'icon'>; moduleAuditData: AuditData; brand: Brand } | null => {
   const moduleInfo = AUDIT_MODULES.find((m) => m.id === slug);
   const moduleAuditData = auditData.find(
     (d) => d.moduleId === slug && d.brandId === brandId
@@ -25,7 +25,10 @@ const getModuleData = (
   if (!moduleInfo || !moduleAuditData || !brand) {
     return null;
   }
-  return { moduleInfo, moduleAuditData, brand };
+  
+  const { icon, ...rest } = moduleInfo;
+
+  return { moduleInfo: rest, moduleAuditData, brand };
 };
 
 export default function AuditModulePage({ params }: { params: { slug: string } }) {
